@@ -31,7 +31,7 @@ export default function SimpleCard() {
       .then((response) => {
         console.log(response)
         if (response.status === 200) {
-          nav('/home')
+          nav('/')
         }
       }).catch(err=>console.log(err))
   }
