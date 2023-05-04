@@ -10,12 +10,15 @@ import { AuthProvider } from "./context/AuthContext";
 import { ChakraProvider } from "@chakra-ui/react";
 import Dashboard from "./pages/Student/Dashboard";
 import Sidebar from "./components/UI/Sidebar";
+import AdminSidebar from "./components/AdminSidebar";
 import Content from "./pages/Student/Content";
 import Assignment from "./pages/Student/Assignment";
 import DetailedContent from "./pages/Student/DetailedContent";
 import DetailedAssignment from "./pages/Student/DetailedAssignment";
 import TeacherContent from "./pages/Teacher/TeacherContent";
 import TeacherAssignment from "./pages/Teacher/TeacherAssignment";
+import AdminHome from "./pages/Admin/AdminHome";
+import AdminStudent from "./pages/Admin/AdminStudent";
 
 const router = createBrowserRouter([
   {
@@ -35,6 +38,19 @@ const router = createBrowserRouter([
       },
       
       
+    ]
+  },
+  {
+    element: <AdminSidebar />,
+    children: [
+      {
+        path: "/admin",
+        element: <AdminHome />,
+      },
+      {
+        path: "/admin/students",
+        element: <AdminStudent />,
+      }
     ]
   },
   {
