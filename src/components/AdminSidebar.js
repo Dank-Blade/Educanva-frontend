@@ -31,8 +31,8 @@ import {
   const linkItems = [
     { name: "Home", href: "/admin" },
     { name: "Students", href: "/admin/students" },
-    { name: "Teachers", href: "/teachers" },
-    { name: "Modules", href: "/modules" },
+    { name: "Teachers", href: "/admin/teachers" },
+    { name: "Modules", href: "/admin/modules" },
     // { name: "Results", href: "/results" },
   ];
   

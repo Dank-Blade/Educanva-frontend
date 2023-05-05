@@ -19,6 +19,7 @@ import TeacherContent from "./pages/Teacher/TeacherContent";
 import TeacherAssignment from "./pages/Teacher/TeacherAssignment";
 import AdminHome from "./pages/Admin/AdminHome";
 import AdminStudent from "./pages/Admin/AdminStudent";
+import AdminTeacher from "./pages/Admin/AdminTeacher";
 
 const router = createBrowserRouter([
   {
@@ -50,6 +51,10 @@ const router = createBrowserRouter([
       {
         path: "/admin/students",
         element: <AdminStudent />,
+      },
+      {
+        path: "/admin/teachers",
+        element: <AdminTeacher />,
       }
     ]
   },

@@ -3,9 +3,11 @@ import {
   Table,
   Thead,
   Tbody,
+  Tfoot,
   Tr,
   Th,
   Td,
+  TableCaption,
   TableContainer,
   Flex,
   Input,
@@ -35,50 +37,55 @@ import {
 } from "react-icons/ai";
 import AuthContext from "../../context/AuthContext";
 
-const AdminStudent = () => {
+const AdminTeacher = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [showPassword, setShowPassword] = React.useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
 
-  const [student, setStudent] = React.useState([]);
-
-  React.useEffect(() => {
-    fetch("http://127.0.0.1:8000/accounts/api/users/")
-      .then((response) => response.json())
-      .then((data) => setStudent(data))
-      .catch((error) => console.error(error));
-  }, []);
-
-  const students = student.filter((s) => s.user_type === "Student");
-
   const toast = useToast();
 
-  const [studentData, setStudentData] = React.useState({});
+  const [teacherData, setTeacherData] = React.useState({});
 
   let { registerUser } = useContext(AuthContext);
 
-  const [filteredStudents, setFilteredStudents] = React.useState([]);
-
   const searchHandler = (e) => {
-    const filtered = students.filter((students) => {
-      return (
-        students.first_name
-          .toLowerCase()
-          .includes(e.target.value.toLowerCase()) ||
-        students.last_name
-          .toLowerCase()
-          .includes(e.target.value.toLowerCase()) ||
-        students.email.toLowerCase().includes(e.target.value.toLowerCase())
-      );
-    });
-    setFilteredStudents(filtered);
+    if (e.target.value === "") {
+      setTeacher(dummy);
+      return;
+    } else {
+      const filtered = dummy.filter((teacher) => {
+        return (
+          teacher.first_name
+            .toLowerCase()
+            .includes(e.target.value.toLowerCase()) ||
+          teacher.last_name
+            .toLowerCase()
+            .includes(e.target.value.toLowerCase()) ||
+          teacher.email.toLowerCase().includes(e.target.value.toLowerCase())
+        );
+      });
+      setTeacher(filtered);
+    }
   };
 
-  const studentList = filteredStudents.length > 0 ? filteredStudents : students;
+  const dummy = [
+    {
+      first_name: "John",
+      last_name: "Doe",
+      email: "john@gmail.com",
+    },
+    {
+      first_name: "Jane",
+      last_name: "Doe",
+      email: "jane@gmail.com",
+    },
+  ];
+
+  const [teacher, setTeacher] = React.useState(dummy);
 
   const submitHandler = (e) => {
     e.preventDefault();
-    if (studentData.password !== studentData.confirm_password) {
+    if (teacherData.password !== teacherData.confirm_password) {
       toast({
         title: "Invalid Password.",
         description: "Passwords do not match.",
@@ -89,11 +96,11 @@ const AdminStudent = () => {
       return;
     }
     registerUser({
-      first_name: studentData.first_name,
-      last_name: studentData.last_name,
-      email: studentData.email,
-      password: studentData.password,
-      user_type: "Student",
+      first_name: teacherData.first_name,
+      last_name: teacherData.last_name,
+      email: teacherData.email,
+      password: teacherData.password,
+      user_type: "Teacher",
     })
       .then((response) => {
         console.log(response);
@@ -105,12 +112,8 @@ const AdminStudent = () => {
             duration: 3000,
             isClosable: true,
           });
-          fetch("http://127.0.0.1:8000/accounts/api/users/")
-            .then((response) => response.json())
-            .then((data) => setStudent(data))
-            .catch((error) => console.error(error));
           onClose();
-          setStudentData({});
+          setTeacherData({});
         }
       })
       .catch((err) => {
@@ -139,7 +142,7 @@ const AdminStudent = () => {
                 <Input
                   placeholder="First name"
                   onChange={(e) =>
-                    setStudentData((prev) => ({
+                    setTeacherData((prev) => ({
                       ...prev,
                       first_name: e.target.value,
                     }))
@@ -152,7 +155,7 @@ const AdminStudent = () => {
                 <Input
                   placeholder="Last name"
                   onChange={(e) =>
-                    setStudentData((prev) => ({
+                    setTeacherData((prev) => ({
                       ...prev,
                       last_name: e.target.value,
                     }))
@@ -167,7 +170,7 @@ const AdminStudent = () => {
                   placeholder="Email"
                   type={"email"}
                   onChange={(e) =>
-                    setStudentData((prev) => ({
+                    setTeacherData((prev) => ({
                       ...prev,
                       email: e.target.value,
                     }))
@@ -183,7 +186,7 @@ const AdminStudent = () => {
                     placeholder="Password"
                     type={!showPassword ? "password" : "text"}
                     onChange={(e) =>
-                      setStudentData((prev) => ({
+                      setTeacherData((prev) => ({
                         ...prev,
                         password: e.target.value,
                       }))
@@ -204,7 +207,7 @@ const AdminStudent = () => {
                     placeholder="Confirm Password"
                     type={!showConfirmPassword ? "password" : "text"}
                     onChange={(e) =>
-                      setStudentData((prev) => ({
+                      setTeacherData((prev) => ({
                         ...prev,
                         confirm_password: e.target.value,
                       }))
@@ -251,7 +254,7 @@ const AdminStudent = () => {
             transition: "all 0.2s ease-in-out",
           }}
         >
-          Add Student
+          Add Teacher
         </Button>
       </Flex>
       <TableContainer>
@@ -265,11 +268,11 @@ const AdminStudent = () => {
             </Tr>
           </Thead>
           <Tbody>
-            {studentList.map((students, index) => (
-              <Tr key={index}>
-                <Td>{students.first_name}</Td>
-                <Td>{students.last_name}</Td>
-                <Td>{students.email}</Td>
+            {teacher.map((teacher) => (
+              <Tr>
+                <Td>{teacher.first_name}</Td>
+                <Td>{teacher.last_name}</Td>
+                <Td>{teacher.email}</Td>
                 <Td>
                   <Flex gap={2}>
                     <Button bg={"#2B6CB0"} onClick={onOpen}>
@@ -289,4 +292,4 @@ const AdminStudent = () => {
   );
 };
 
-export default AdminStudent;
+export default AdminTeacher;
