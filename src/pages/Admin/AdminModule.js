@@ -3,11 +3,9 @@ import {
   Table,
   Thead,
   Tbody,
-  Tfoot,
   Tr,
   Th,
   Td,
-  TableCaption,
   TableContainer,
   Flex,
   Input,
@@ -37,7 +35,7 @@ import {
 } from "react-icons/ai";
 import AuthContext from "../../context/AuthContext";
 
-const AdminTeacher = () => {
+const AdminModule = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [showPassword, setShowPassword] = React.useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
@@ -292,4 +290,4 @@ const AdminTeacher = () => {
   );
 };
 
-export default AdminTeacher;
+export default AdminModule;

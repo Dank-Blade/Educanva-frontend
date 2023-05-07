@@ -34,6 +34,7 @@ import {
   AiFillDelete,
 } from "react-icons/ai";
 import AuthContext from "../../context/AuthContext";
+import EditModal from "./EditModal";
 
 const AdminTeacher = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -58,6 +59,10 @@ const AdminTeacher = () => {
   let { registerUser } = useContext(AuthContext);
 
   const [filteredTeachers, setFilteredTeachers] = React.useState([]);
+
+  const [isEditModalOpen, setIsEditModalOpen] = React.useState(false);
+
+  const [selectedTeacher, setSelectedTeacher] = React.useState("");
 
   const searchHandler = (e) => {
     const filtered = teachers.filter((teacher) => {
@@ -122,6 +127,40 @@ const AdminTeacher = () => {
           isClosable: true,
         });
       });
+  };
+
+  const deleteHandler = (id) => {
+    fetch(`http://127.0.0.1:8000/accounts/api/users/${id}/`, {
+      method: "DELETE",
+    }).then((data) => {
+      console.log(data);
+
+      fetch("http://127.0.0.1:8000/accounts/api/users/")
+        .then((response) => response.json())
+        .then((data) => setTeacher(data))
+        .catch((error) => console.error(error));
+    });
+  };
+
+  const openEditModal = (id) => {
+    setIsEditModalOpen(true);
+    setSelectedTeacher(id);
+  };
+
+  const editHandler = (updatedData) => {
+    setTeacher((prev) => {
+      const index = prev.findIndex((s) => s.id === updatedData.id);
+      prev[index] = updatedData;
+      return [...prev];
+    });
+    setIsEditModalOpen(false);
+    toast({
+      title: "Account created.",
+      description: "Successfully edited.",
+      status: "success",
+      duration: 3000,
+      isClosable: true,
+    });
   };
 
   return (
@@ -272,10 +311,24 @@ const AdminTeacher = () => {
                 <Td>{teacher.email}</Td>
                 <Td>
                   <Flex gap={2}>
-                    <Button bg={"#2B6CB0"} onClick={onOpen}>
+                    <Button
+                      bg={"#2B6CB0"}
+                      onClick={() => openEditModal(teacher.id)}
+                    >
                       <AiFillEdit color={"white"} />
                     </Button>
-                    <Button bg={"#E53E3E"}>
+                    <Button
+                      bg={"#E53E3E"}
+                      onClick={() => deleteHandler(teacher.id)}
+                    >
+                      {isEditModalOpen && selectedTeacher === teacher.id && (
+                        <EditModal
+                          isOpen={isEditModalOpen}
+                          onClose={() => setIsEditModalOpen(false)}
+                          data={teacher}
+                          onEdit={editHandler}
+                        />
+                      )}
                       <AiFillDelete color={"white"} />
                     </Button>
                   </Flex>

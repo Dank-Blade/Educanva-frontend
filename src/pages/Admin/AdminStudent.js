@@ -34,6 +34,7 @@ import {
   AiFillDelete,
 } from "react-icons/ai";
 import AuthContext from "../../context/AuthContext";
+import EditModal from "./EditModal";
 
 const AdminStudent = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -58,6 +59,10 @@ const AdminStudent = () => {
   let { registerUser } = useContext(AuthContext);
 
   const [filteredStudents, setFilteredStudents] = React.useState([]);
+
+  const [isEditModalOpen, setIsEditModalOpen] = React.useState(false);
+
+  const [selectedStudent, setSelectedStudent] = React.useState("");
 
   const searchHandler = (e) => {
     const filtered = students.filter((students) => {
@@ -124,13 +129,47 @@ const AdminStudent = () => {
       });
   };
 
+  const deleteHandler = (id) => {
+    fetch(`http://127.0.0.1:8000/accounts/api/users/${id}/`, {
+      method: "DELETE",
+    }).then((data) => {
+      console.log(data);
+
+      fetch("http://127.0.0.1:8000/accounts/api/users/")
+        .then((response) => response.json())
+        .then((data) => setStudent(data))
+        .catch((error) => console.error(error));
+    });
+  };
+
+  const openEditModal = (id) => {
+    setIsEditModalOpen(true);
+    setSelectedStudent(id);
+  };
+
+  const editHandler = (updatedData) => {
+    setStudent((prev) => {
+      const index = prev.findIndex((s) => s.id === updatedData.id);
+      prev[index] = updatedData;
+      return [...prev];
+    });
+    setIsEditModalOpen(false);
+    toast({
+      title: "Account created.",
+      description: "Successfully edited.",
+      status: "success",
+      duration: 3000,
+      isClosable: true,
+    });
+  };
+
   return (
     <Flex direction={"column"}>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
 
         <ModalContent as={"form"} onSubmit={submitHandler}>
-          <ModalHeader>Create your account</ModalHeader>
+          <ModalHeader>Create student account</ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6} as={Flex} direction={"column"} gap={3}>
             <HStack>
@@ -265,17 +304,31 @@ const AdminStudent = () => {
             </Tr>
           </Thead>
           <Tbody>
-            {studentList.map((students, index) => (
+            {studentList.map((student, index) => (
               <Tr key={index}>
-                <Td>{students.first_name}</Td>
-                <Td>{students.last_name}</Td>
-                <Td>{students.email}</Td>
+                <Td>{student.first_name}</Td>
+                <Td>{student.last_name}</Td>
+                <Td>{student.email}</Td>
                 <Td>
                   <Flex gap={2}>
-                    <Button bg={"#2B6CB0"} onClick={onOpen}>
+                    <Button
+                      bg={"#2B6CB0"}
+                      onClick={() => openEditModal(student.id)}
+                    >
+                      {isEditModalOpen && selectedStudent === student.id && (
+                        <EditModal
+                          isOpen={isEditModalOpen}
+                          onClose={() => setIsEditModalOpen(false)}
+                          data={student}
+                          onEdit={editHandler}
+                        />
+                      )}
                       <AiFillEdit color={"white"} />
                     </Button>
-                    <Button bg={"#E53E3E"}>
+                    <Button
+                      bg={"#E53E3E"}
+                      onClick={() => deleteHandler(student.id)}
+                    >
                       <AiFillDelete color={"white"} />
                     </Button>
                   </Flex>
