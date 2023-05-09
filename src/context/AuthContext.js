@@ -8,6 +8,7 @@ export default AuthContext;
 export const AuthProvider = ({ children }) => {
   let [authTokens, setAuthTokens] = useState(null);
   let [registerData, setRegisterData] = useState(null);
+  let [moduleData, setModuleData] = useState(null);
   let [userData, setUserData] = useState(null);
   let [user, setUser] = useState(null);
 
@@ -24,9 +25,7 @@ export const AuthProvider = ({ children }) => {
         }),
     })
     let data = await response.json();
-    console.log(data)
     if (response.status === 200) {
-      
       setAuthTokens(data);    
       setUser(jwtDecode(data.access));
       localStorage.setItem('tokens', JSON.stringify(data));
@@ -35,10 +34,10 @@ export const AuthProvider = ({ children }) => {
     else {
       alert('Something went wrong. Please try again later.')
     }
-    return response;
+    return data;
   };
 
-  let registerUser = async ({ first_name, last_name, email, password, user_type }) => {
+  let registerUser = async ({ first_name, last_name, email, password, user_type}) => {
     let response = await fetch("http://127.0.0.1:8000/accounts/api/register/", {
       method: "POST",
       headers: {
@@ -53,9 +52,28 @@ export const AuthProvider = ({ children }) => {
       }),
     });
     let data = await response.json();
-    console.log(data);
     if (response.status === 201) {
       setRegisterData(data);
+    } else {
+      alert("Something went wrong. Please try again later.");
+    }
+    return response;
+  };
+
+  let addModule = async ({ module_code, module_name }) => {
+    let response = await fetch("http://127.0.0.1:8000/module/api/create/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        module_code: module_code,
+        module_name: module_name,
+      }),
+    });
+    let data = await response.json();
+    if (response.status === 201) {
+      setModuleData(data);
     } else {
       alert("Something went wrong. Please try again later.");
     }
@@ -80,6 +98,7 @@ export const AuthProvider = ({ children }) => {
     loginUser:loginUser,
     registerUser: registerUser,
     getUserData: getUserData,
+    addModule: addModule,
   };
 
   return (

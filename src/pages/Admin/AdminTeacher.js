@@ -35,6 +35,8 @@ import {
 } from "react-icons/ai";
 import AuthContext from "../../context/AuthContext";
 import EditModal from "./EditModal";
+import { useNavigate } from "react-router-dom";
+import jwtDecode from "jwt-decode";
 
 const AdminTeacher = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -43,8 +45,24 @@ const AdminTeacher = () => {
 
   const [teacher, setTeacher] = React.useState([]);
 
+  const nav = useNavigate();
+
   React.useEffect(() => {
-    fetch("http://127.0.0.1:8000/accounts/api/users/")
+    if (!localStorage.getItem("tokens")) nav("/admin/login/");
+    if (
+      jwtDecode(JSON.parse(localStorage.getItem("tokens")).access).user_type !==
+      "Admin"
+    )
+      nav("/admin/login/");
+    fetch("http://127.0.0.1:8000/accounts/api/users/", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `Bearer ${
+          JSON.parse(localStorage.getItem("tokens")).access
+        }`,
+      },
+    })
       .then((response) => response.json())
       .then((data) => setTeacher(data))
       .catch((error) => console.error(error));
@@ -110,7 +128,15 @@ const AdminTeacher = () => {
             duration: 3000,
             isClosable: true,
           });
-          fetch("http://127.0.0.1:8000/accounts/api/users/")
+          fetch("http://127.0.0.1:8000/accounts/api/users/", {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              authorization: `Bearer ${
+                JSON.parse(localStorage.getItem("tokens")).access
+              }`,
+            },
+          })
             .then((response) => response.json())
             .then((data) => setTeacher(data))
             .catch((error) => console.error(error));
@@ -132,10 +158,24 @@ const AdminTeacher = () => {
   const deleteHandler = (id) => {
     fetch(`http://127.0.0.1:8000/accounts/api/users/${id}/`, {
       method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `Bearer ${
+          JSON.parse(localStorage.getItem("tokens")).access
+        }`,
+      },
     }).then((data) => {
       console.log(data);
 
-      fetch("http://127.0.0.1:8000/accounts/api/users/")
+      fetch("http://127.0.0.1:8000/accounts/api/users/", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `Bearer ${
+            JSON.parse(localStorage.getItem("tokens")).access
+          }`,
+        },
+      })
         .then((response) => response.json())
         .then((data) => setTeacher(data))
         .catch((error) => console.error(error));
@@ -155,7 +195,7 @@ const AdminTeacher = () => {
     });
     setIsEditModalOpen(false);
     toast({
-      title: "Account created.",
+      title: "Account edited.",
       description: "Successfully edited.",
       status: "success",
       duration: 3000,
@@ -169,7 +209,7 @@ const AdminTeacher = () => {
         <ModalOverlay />
 
         <ModalContent as={"form"} onSubmit={submitHandler}>
-          <ModalHeader>Create your account</ModalHeader>
+          <ModalHeader>Create Teacher Account</ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6} as={Flex} direction={"column"} gap={3}>
             <HStack>

@@ -47,12 +47,26 @@ const EditModal = ({ isOpen, onClose, data, onEdit }) => {
       formData.append("first_name", newData.first_name);
       formData.append("last_name", newData.last_name);
       formData.append("email", newData.email);
+      formData.append("user_type", newData.user_type);
     }
 
     fetch(`http://127.0.0.1:8000/accounts/api/users/${data.id}/`, {
-      method: "PUT",
-      body: formData,
-    })
+        method: "PUT",
+        body: formData,
+        // body: JSON.stringify({
+        //     first_name: newData.first_name,
+        //     last_name: newData.last_name,
+        //     email: newData.email,
+        //     user_type: newData.user_type,
+        //     password: newData.password,
+        // }),
+
+        headers: {
+          authorization: `Bearer ${
+            JSON.parse(localStorage.getItem("tokens")).access
+          }`,
+        },
+      })
       .then((response) => onEdit(newData))
       .catch((error) => console.error(error));
   };

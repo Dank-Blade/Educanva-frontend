@@ -15,41 +15,44 @@ import {
 } from "@chakra-ui/react";
 import { Link, useNavigate } from "react-router-dom";
 import { useContext, useRef } from "react";
-import AuthContext from "../context/AuthContext";
+import AuthContext from "../../context/AuthContext";
 import jwtDecode from "jwt-decode";
 
-export default function Login() {
+export default function AdminLogin() {
   let { loginUser } = useContext(AuthContext);
   const emailInput = useRef();
   const passwordInput = useRef();
 
-
   const nav = useNavigate();
+
   const toast = useToast();
 
   const submitHandler = (e) => {
     e.preventDefault();
-    loginUser({email : emailInput.current.value, password : passwordInput.current.value})
-    .then((response) => {
+    loginUser({
+      email: emailInput.current.value,
+      password: passwordInput.current.value,
+    })
+      .then((response) => {
+          const userType = jwtDecode(response.access).user_type;
 
-
-      const userType = jwtDecode(response.access).user_type;
-
-      if (userType === "Student") {
-        nav("/");
-      }
-      else {
-        toast({
-            title: "Not a student",
-            description: "Need student credentials to login",
-            status: "error",
-            duration: 3000,
-            isClosable: true,
-          });
-        nav("/login");
-      } 
-      }).catch(err=>console.log(err))
-  }
+          if (userType === "Admin") {
+            nav("/admin");
+          }
+          else {
+            toast({
+                title: "Not an admin",
+                description: "Need admin credentials to login",
+                status: "error",
+                duration: 3000,
+                isClosable: true,
+              });
+            nav("/admin/login");
+          } 
+        
+      })
+      .catch((err) => console.log(err));
+  };
 
   return (
     <Flex

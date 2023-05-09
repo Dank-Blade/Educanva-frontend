@@ -20,11 +20,21 @@ import TeacherAssignment from "./pages/Teacher/TeacherAssignment";
 import AdminHome from "./pages/Admin/AdminHome";
 import AdminStudent from "./pages/Admin/AdminStudent";
 import AdminTeacher from "./pages/Admin/AdminTeacher";
+import AdminLogin from "./pages/Admin/AdminLogin";
+import AdminModule from "./pages/Admin/AdminModule";
+import AuthVerify from "./components/common/AuthVerify";
+
+
+
 
 const router = createBrowserRouter([
   {
     path: "/login",
     element: <Login />,
+  },
+  {
+    path: "/admin/login",
+    element: <AdminLogin />,
   },
   {
     path: "/register",
@@ -55,7 +65,11 @@ const router = createBrowserRouter([
       {
         path: "/admin/teachers",
         element: <AdminTeacher />,
-      }
+      },
+      {
+        path: "/admin/modules",
+        element: <AdminModule />,
+      },
     ]
   },
   {
@@ -90,6 +104,7 @@ function App() {
     <ChakraProvider>
       <AuthProvider>
         <RouterProvider router={router} />
+        <AuthVerify />
       </AuthProvider>
     </ChakraProvider>
   );
