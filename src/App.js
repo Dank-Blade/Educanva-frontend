@@ -1,5 +1,9 @@
 import * as React from "react";
-import { BrowserRouter, createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+  BrowserRouter,
+  createBrowserRouter,
+  RouterProvider,
+} from "react-router-dom";
 import PrivateRoute from "./utils/PrivateRoute";
 
 import Login from "./pages/Login";
@@ -23,9 +27,7 @@ import AdminTeacher from "./pages/Admin/AdminTeacher";
 import AdminLogin from "./pages/Admin/AdminLogin";
 import AdminModule from "./pages/Admin/AdminModule";
 import AuthVerify from "./components/common/AuthVerify";
-
-
-
+import { ModulesProvider } from "./context/ModulesContext";
 
 const router = createBrowserRouter([
   {
@@ -47,9 +49,7 @@ const router = createBrowserRouter([
         path: "/",
         element: <Dashboard />,
       },
-      
-      
-    ]
+    ],
   },
   {
     element: <AdminSidebar />,
@@ -70,22 +70,22 @@ const router = createBrowserRouter([
         path: "/admin/modules",
         element: <AdminModule />,
       },
-    ]
+    ],
   },
   {
     path: "/module/:moduleId/content",
     element: <Content />,
   },
   {
-    path:"/module/:id/content/:id",
+    path: "/module/:id/content/:id",
     element: <DetailedContent />,
   },
   {
-    path:"/module/:moduleId/assignment",
+    path: "/module/:moduleId/assignment",
     element: <Assignment />,
   },
   {
-    path:"/module/:id/assignment/:id",
+    path: "/module/:id/assignment/:id",
     element: <DetailedAssignment />,
   },
   {
@@ -103,7 +103,9 @@ function App() {
   return (
     <ChakraProvider>
       <AuthProvider>
-        <RouterProvider router={router} />
+        <ModulesProvider>
+          <RouterProvider router={router} />
+        </ModulesProvider>
         <AuthVerify />
       </AuthProvider>
     </ChakraProvider>

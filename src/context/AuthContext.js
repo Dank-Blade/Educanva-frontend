@@ -9,8 +9,7 @@ export const AuthProvider = ({ children }) => {
   let [authTokens, setAuthTokens] = useState(null);
   let [registerData, setRegisterData] = useState(null);
   let [moduleData, setModuleData] = useState(null);
-  let [userData, setUserData] = useState(null);
-  let [user, setUser] = useState(null);
+  let [user, setUser] = useState({});
 
 
   let loginUser = async ({email, password}) => {
@@ -80,24 +79,11 @@ export const AuthProvider = ({ children }) => {
     return response;
   };
 
-  let getUserData = async () => {
-    let response = await fetch("http://127.0.0.1:8000/accounts/api/users/", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-    },
-    });
-    let data = await response.json();
-    console.log(data);
-    
-    return response;
-  }
 
   let contextData = {
     user:user,
     loginUser:loginUser,
     registerUser: registerUser,
-    getUserData: getUserData,
     addModule: addModule,
   };
 

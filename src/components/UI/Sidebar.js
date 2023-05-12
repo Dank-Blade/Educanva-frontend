@@ -2,8 +2,6 @@ import {
   Box,
   Flex,
   Avatar,
-  HStack,
-  Link,
   IconButton,
   Button,
   Menu,
@@ -13,20 +11,20 @@ import {
   MenuDivider,
   useDisclosure,
   useColorModeValue,
-  Stack,
   DrawerContent,
   DrawerOverlay,
   Drawer,
   Icon,
-  InputGroup,
-  InputLeftElement,
-  Input,
   Text,
-  Collapse,
+  useToast,
 } from "@chakra-ui/react";
-import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
+import { HamburgerIcon } from "@chakra-ui/icons";
 import { Outlet, NavLink } from "react-router-dom";
 import { FaBell } from "react-icons/fa";
+import { AiOutlinePlus } from "react-icons/ai";
+import AddModuleModal from "../AddModuleModal";
+import { useContext, useState } from "react";
+import { ModulesContext } from "../../context/ModulesContext";
 
 const linkItems = [
   { name: "Home", href: "/" },
@@ -36,9 +34,34 @@ const linkItems = [
 ];
 
 const Sidebar = () => {
+  const { displayedModules, updateDisplayedModules } = useContext(ModulesContext);
+
+
   const sidebar = useDisclosure();
   const integrations = useDisclosure();
   const color = useColorModeValue("gray.600", "gray.300");
+
+  const toast = useToast();
+
+
+  const [isOpen, setIsOpen] = useState(false);
+
+  const openModal = () => {
+    setIsOpen(true);
+  }
+
+const editHandler = (updatedData) => {
+    updateDisplayedModules(updatedData);
+    setIsOpen(false);
+    toast({
+      title: "Module added.",
+      description: "Successfully added.",
+      status: "success",
+      duration: 3000,
+      isClosable: true,
+    });
+  }
+
 
   const NavItem = (props) => {
     const { icon, children, ...rest } = props;
@@ -207,22 +230,37 @@ const Sidebar = () => {
             icon={<HamburgerIcon />}
             size="sm"
           />
-          
 
-          <Flex align='center' justifyContent={'end'} width={'full'} gap={'16px'}>
+          <Flex
+            align="center"
+            justifyContent={"end"}
+            width={"full"}
+            gap={"16px"}
+          >
             <Menu>
-            <Icon color="gray.500" as={FaBell} cursor="pointer" />
+              <Button backgroundColor={'transparent'} onClick={openModal}>
+                <AiOutlinePlus color="gray.200"/>
+                {isOpen  && (
+                        <AddModuleModal
+                          isOpen={isOpen}
+                          onClose={() => setIsOpen(false)}
+                          // data={student}
+                          onEdit={editHandler}
+                        />
+                      )}
+              </Button>
+              <Icon color="gray.500" as={FaBell} cursor="pointer" />
               <MenuButton
                 as={Button}
-                rounded={'full'}
-                variant={'link'}
-                cursor={'pointer'}
-                minW={0}>
-                
+                rounded={"full"}
+                variant={"link"}
+                cursor={"pointer"}
+                minW={0}
+              >
                 <Avatar
-                  size={'sm'}
+                  size={"sm"}
                   src={
-                    'https://images.unsplash.com/photo-1493666438817-866a91353ca9?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=b616b2c5b373a80ffc9636ba24f7a4a9'
+                    "https://images.unsplash.com/photo-1493666438817-866a91353ca9?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=b616b2c5b373a80ffc9636ba24f7a4a9"
                   }
                 />
               </MenuButton>

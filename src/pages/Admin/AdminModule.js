@@ -60,7 +60,7 @@ const AdminModule = () => {
         setModules(data);
       })
       .catch((error) => console.error(error));
-  }, []);
+  });
 
   const toast = useToast();
 
