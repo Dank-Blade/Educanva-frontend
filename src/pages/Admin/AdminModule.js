@@ -46,6 +46,10 @@ const AdminModule = () => {
       "Admin"
     )
       nav("/admin/login/");
+    fetchModules();
+  }, [nav]);
+
+  const fetchModules = () => {
     fetch("http://127.0.0.1:8000/module/api/modules/", {
       method: "GET",
       headers: {
@@ -60,7 +64,7 @@ const AdminModule = () => {
         setModules(data);
       })
       .catch((error) => console.error(error));
-  });
+  };
 
   const toast = useToast();
 
@@ -91,14 +95,12 @@ const AdminModule = () => {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    console.log(moduleData);
 
     addModule({
       module_code: moduleData.module_code,
       module_name: moduleData.module_name,
     })
       .then((response) => {
-        console.log(response);
         if (response.status === 201) {
           toast({
             title: "Moduke created.",
@@ -107,18 +109,7 @@ const AdminModule = () => {
             duration: 3000,
             isClosable: true,
           });
-          fetch("http://127.0.0.1:8000/module/api/modules/", {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              authorization: `Bearer ${
-                JSON.parse(localStorage.getItem("tokens")).access
-              }`,
-            },
-          })
-            .then((response) => response.json())
-            .then((data) => setModules(data))
-            .catch((error) => console.error(error));
+          fetchModules();
           onClose();
           setModuleData({});
         }
@@ -146,18 +137,7 @@ const AdminModule = () => {
     }).then((data) => {
       console.log(data);
 
-      fetch("http://127.0.0.1:8000/module/api/modules/", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          authorization: `Bearer ${
-            JSON.parse(localStorage.getItem("tokens")).access
-          }`,
-        },
-      })
-        .then((response) => response.json())
-        .then((data) => setModules(data))
-        .catch((error) => console.error(error));
+      fetchModules();
     });
   };
 

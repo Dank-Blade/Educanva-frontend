@@ -6,6 +6,7 @@ import {
   FormControl,
   FormLabel,
   HStack,
+  useToast,
 } from "@chakra-ui/react";
 import {
   Modal,
@@ -28,6 +29,8 @@ const AddModuleModal = ({ isOpen, onClose, onEdit }) => {
   const userData = jwtDecode(JSON.parse(localStorage.getItem("tokens")).access);
 
   const formIsValid = moduleCodeInput.isValid;
+
+  const toast = useToast();
 
   // useEffect(() => {
   //   fetch(`http://127.0.0.1:8000/accounts/api/users/modules/${userData.id}`, {
@@ -111,19 +114,37 @@ const AddModuleModal = ({ isOpen, onClose, onEdit }) => {
     if (matchingModule) {
       if (modules.some((module) => module.id === matchingModule.id)) {
         console.log("Module already exists");
-        setModules((prevModules) => [...prevModules]);
+        toast({
+          title: "Module failed to add.",
+          description: "Module already added.",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
+        // updateModules(modules);
       } else {
         updatedModules = [...modules, matchingModule];
+        updateModules(updatedModules);
       }
     } else {
       console.log("Module does not exist");
+      toast({
+        title: "Module failed to add.",
+        description: "Module does not exist",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
     }
 
+    fetchAllModules();
+  };
 
+  const updateModules = (modules) => {
     fetch(`http://127.0.0.1:8000/accounts/api/users/modules/${userData.id}/`, {
       method: "PATCH",
       body: JSON.stringify({
-        'modules': updatedModules,
+        'modules': modules,
       }),
       headers: {
         'Content-Type': 'application/json',
@@ -132,11 +153,9 @@ const AddModuleModal = ({ isOpen, onClose, onEdit }) => {
         }`,
       },
     })
-      .then((response) => onEdit(updatedModules))
+      .then((response) => onEdit(modules))
       .catch((error) => console.error(error));
-
-    fetchAllModules();
-  };
+  }
 
   const fetchModules = () => {
     fetch(`http://127.0.0.1:8000/accounts/api/users/modules/${userData.id}`, {
@@ -175,7 +194,7 @@ const AddModuleModal = ({ isOpen, onClose, onEdit }) => {
   useEffect(() => {
     fetchModules();
     fetchAllModules();
-  }, []);
+  });
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>

@@ -2,20 +2,49 @@ import { Flex, useDisclosure } from "@chakra-ui/react";
 import ModuleNavbar from "../../components/UI/ModuleNavbar";
 import DrawerModule from "../../components/UI/DrawerModule";
 import ContentCard from "../../components/UI/Cards/ContentCard";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AddContents from "../../components/UI/Cards/AddContents";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 const TeacherContent = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const [data, setData] = useState([
-    { heading: "Content 1", id: "1" },
-    { heading: "Content 2", id: "2" },
-    { heading: "Content 3", id: "3" },
-    { heading: "Content 4", id: "4" },
-    { heading: "Content 5", id: "5" },
-    { heading: "Content 6", id: "6" },
-  ]);
+
+  const id = useParams().id;
+
+  const [contents, setContents] = useState([]);
+
+  const nav = useNavigate();
+
+  
+  const fetchContents = () => {
+    fetch(`http://127.0.0.1:8000/file/list/${id}/`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `Bearer ${
+          JSON.parse(localStorage.getItem("tokens")).access
+        }`,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setContents(data);
+      })
+      .catch((error) => console.error(error));
+  };
+
+  const filteredContents = contents.filter((item) => item.content_type === "Content");
+  console.log(filteredContents);
+
+  useEffect(() => {
+    if (!localStorage.getItem("tokens")) nav("/login/");
+    fetchContents();
+  }, [nav]);
+
+  const updatedData = (newData) => {
+    setContents([...contents, newData]);
+  };
 
   return (
     <>
@@ -29,7 +58,7 @@ const TeacherContent = () => {
         justifyContent={"center"}
       >
         <Flex pt={"20px"}>
-          <AddContents />
+          <AddContents updatedData={updatedData}/>
         </Flex>
         <Flex
           flexDirection={"column"}
@@ -37,11 +66,11 @@ const TeacherContent = () => {
           minW={"740px"}
           alignContent={""}
         >
-          {data.map((item, index) => {
+          {filteredContents.map((item, index) => {
             return (
               <ContentCard
                 key={index}
-                heading={item.heading}
+                heading={item.name}
                 contentId={item.id}
               />
             );

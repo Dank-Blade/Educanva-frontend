@@ -17,20 +17,42 @@ import {
   Icon,
 } from "@chakra-ui/react";
 import { HamburgerIcon } from "@chakra-ui/icons";
-import { NavLink } from "react-router-dom";
-
-const Links = [
-  {
-    name: "Content",
-    href: "/module/1/content/",
-  },
-  {
-    name: "Assignments",
-    href: "/module/1/assignment/",
-  },
-];
+import { NavLink, useParams } from "react-router-dom";
+import { useEffect } from "react";
+import jwtDecode from "jwt-decode";
+import { useState } from "react";
 
 export default function ModuleNavbar(props) {
+  const params = useParams();
+  const id = params.id;
+
+  const [links, setLinks] = useState([]);
+
+  useEffect(() => {
+    jwtDecode(JSON.parse(localStorage.getItem("tokens")).access).user_type ===
+    "Student"
+      ? setLinks([
+          {
+            name: "Content",
+            href: `/module/${id}/content/`,
+          },
+          {
+            name: "Assignments",
+            href: `/module/${id}/assignment/`,
+          },
+        ])
+      : setLinks([
+          {
+            name: "Content",
+            href: `/teacher/module/${id}/content/`,
+          },
+          {
+            name: "Assignments",
+            href: `/teacher/module/${id}/assignment/`,
+          },
+        ]);
+  }, [id]);
+
   const color = useColorModeValue("gray.600", "gray.300");
 
   const NavItem = (props) => {
@@ -94,7 +116,7 @@ export default function ModuleNavbar(props) {
               spacing={4}
               display={{ base: "none", md: "flex" }}
             >
-              {Links.map((link) => (
+              {links.map((link) => (
                 <NavLink to={link.href} key={link.name}>
                   <NavItem>{link.name}</NavItem>
                 </NavLink>
@@ -131,7 +153,7 @@ export default function ModuleNavbar(props) {
         {isOpen ? (
           <Box pb={4} display={{ md: "none" }}>
             <Stack as={"nav"} spacing={4}>
-              {Links.map((link) => (
+              {links.map((link) => (
                 <NavLink key={link}>{link}</NavLink>
               ))}
             </Stack>

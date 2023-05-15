@@ -28,6 +28,9 @@ import AdminLogin from "./pages/Admin/AdminLogin";
 import AdminModule from "./pages/Admin/AdminModule";
 import AuthVerify from "./components/common/AuthVerify";
 import { ModulesProvider } from "./context/ModulesContext";
+import TeacherDashboard from "./pages/Teacher/TeacherDashboard";
+import TeacherDetailedContent from "./pages/Teacher/TeacherDetailedContent";
+import TeacherDetailedAssignment from "./pages/Teacher/TeacherDetailedAssignment";
 
 const router = createBrowserRouter([
   {
@@ -49,6 +52,10 @@ const router = createBrowserRouter([
         path: "/",
         element: <Dashboard />,
       },
+      {
+        path: "/teacher",
+        element: <TeacherDashboard />,
+      }
     ],
   },
   {
@@ -73,29 +80,37 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: "/module/:moduleId/content",
+    path: "/module/:id/content",
     element: <Content />,
   },
   {
-    path: "/module/:id/content/:id",
+    path: "/module/:id/content/:contentId",
     element: <DetailedContent />,
   },
   {
-    path: "/module/:moduleId/assignment",
+    path: "/module/:id/assignment",
     element: <Assignment />,
   },
   {
-    path: "/module/:id/assignment/:id",
+    path: "/module/:id/assignment/:assignmentId",
     element: <DetailedAssignment />,
   },
   {
-    path: "/teachercontent",
+    path: "/teacher/module/:id/content",
     element: <TeacherContent />,
   },
   {
-    path: "/teacherassignment",
+    path: "/teacher/module/:id/assignment",
     element: <TeacherAssignment />,
   },
+  {
+    path:"/teacher/module/:id/content/:contentId",
+    element: <TeacherDetailedContent />,
+  },
+  {
+    path:"/teacher/module/:id/assignment/:assignmentId",
+    element: <TeacherDetailedAssignment />,
+  }
 ]);
 
 function App() {

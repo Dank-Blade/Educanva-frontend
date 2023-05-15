@@ -8,12 +8,13 @@ import {
     Icon,
     Flex,
   } from "@chakra-ui/react";
+import jwtDecode from "jwt-decode";
   import { TiClipboard } from "react-icons/ti";
   import { useNavigate, useParams } from "react-router-dom";
   
   export default function AssignmentCard({ heading, assignmentId }) {
     const navigate = useNavigate();
-    const { moduleId } = useParams();
+    const { id } = useParams();
   
     return (
       <Center py={6}>
@@ -29,7 +30,10 @@ import {
           overflow={"hidden"}
           cursor={"pointer"}
           onClick={() => {
-            navigate(`/module/${moduleId}/assignment/${assignmentId}`);
+            jwtDecode(JSON.parse(localStorage.getItem("tokens")).access)
+            .user_type === "Teacher"
+            ? navigate(`/teacher/module/${id}/assignment/${assignmentId}`)
+            : navigate(`/module/${id}/assignment/${assignmentId}`);
           }}
         >
           {/* <Box

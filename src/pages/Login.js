@@ -14,7 +14,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { Link, useNavigate } from "react-router-dom";
-import { useContext, useRef } from "react";
+import { useContext, useEffect, useRef } from "react";
 import AuthContext from "../context/AuthContext";
 import jwtDecode from "jwt-decode";
 
@@ -23,33 +23,50 @@ export default function Login() {
   const emailInput = useRef();
   const passwordInput = useRef();
 
-
   const nav = useNavigate();
   const toast = useToast();
 
-  const submitHandler = (e) => {
-    e.preventDefault();
-    loginUser({email : emailInput.current.value, password : passwordInput.current.value})
-    .then((response) => {
+  const loggedIn = localStorage.getItem("tokens") !== null;
 
-
-      const userType = jwtDecode(response.access).user_type;
-
+  useEffect(() => {
+    if (loggedIn) {
+      const userType = jwtDecode(
+        JSON.parse(localStorage.getItem("tokens")).access
+      ).user_type;
       if (userType === "Student") {
         nav("/");
+      } else if (userType === "Teacher") {
+        nav("/teacher");
       }
-      else {
-        toast({
+    }
+  }, [loggedIn]);
+
+  const submitHandler = (e) => {
+    e.preventDefault();
+    loginUser({
+      email: emailInput.current.value,
+      password: passwordInput.current.value,
+    })
+      .then((response) => {
+        const userType = jwtDecode(response.access).user_type;
+
+        if (userType === "Student") {
+          nav("/");
+        } else if (userType === "Teacher") {
+          nav("/teacher");
+        } else {
+          toast({
             title: "Not a student",
             description: "Need student credentials to login",
             status: "error",
             duration: 3000,
             isClosable: true,
           });
-        nav("/login");
-      } 
-      }).catch(err=>console.log(err))
-  }
+          nav("/login");
+        }
+      })
+      .catch((err) => console.log(err));
+  };
 
   return (
     <Flex

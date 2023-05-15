@@ -10,17 +10,22 @@ import {
   useColorModeValue,
   Text,
 } from "@chakra-ui/react";
+import jwtDecode from "jwt-decode";
 import React from "react";
 import { NavLink } from "react-router-dom";
 
-const linkItems = [
-  { name: "Home", href: "/" },
-  { name: "Assignments", href: "/assignments" },
-  { name: "Exams", href: "/exams" },
-  { name: "Results", href: "/results" },
-];
-
 const DrawerModule = (props) => {
+  const user_type = jwtDecode(JSON.parse(localStorage.getItem("tokens")).access).user_type;
+  
+  const home_href = user_type === "Student" ? "/" : "/teacher";
+
+  const linkItems = [
+    { name: "Home", href: home_href },
+    { name: "Assignments", href: "/assignments" },
+    { name: "Exams", href: "/exams" },
+    { name: "Results", href: "/results" },
+  ];
+
   const color = useColorModeValue("gray.600", "gray.300");
 
   const NavItem = (props) => {
@@ -109,7 +114,7 @@ const DrawerModule = (props) => {
             <NavItem>{link.name}</NavItem>
           </NavLink>
         ))}
-        
+
         {/* <NavItem onClick={integrations.onToggle}>
           Integrations
           <Icon

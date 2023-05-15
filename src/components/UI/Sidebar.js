@@ -25,15 +25,22 @@ import { AiOutlinePlus } from "react-icons/ai";
 import AddModuleModal from "../AddModuleModal";
 import { useContext, useState } from "react";
 import { ModulesContext } from "../../context/ModulesContext";
+import jwtDecode from "jwt-decode";
 
-const linkItems = [
-  { name: "Home", href: "/" },
-  { name: "Assignments", href: "/assignments" },
-  { name: "Exams", href: "/exams" },
-  { name: "Results", href: "/results" },
-];
+
 
 const Sidebar = () => {
+  const user_type = jwtDecode(JSON.parse(localStorage.getItem("tokens")).access).user_type;
+  
+  const home_href = user_type === "Student" ? "/" : "/teacher";
+
+  const linkItems = [
+    { name: "Home", href: home_href },
+    { name: "Assignments", href: "/assignments" },
+    { name: "Exams", href: "/exams" },
+    { name: "Results", href: "/results" },
+  ];
+
   const { displayedModules, updateDisplayedModules } = useContext(ModulesContext);
 
 
@@ -244,7 +251,6 @@ const editHandler = (updatedData) => {
                         <AddModuleModal
                           isOpen={isOpen}
                           onClose={() => setIsOpen(false)}
-                          // data={student}
                           onEdit={editHandler}
                         />
                       )}

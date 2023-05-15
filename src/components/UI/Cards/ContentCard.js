@@ -8,12 +8,13 @@ import {
   Icon,
   Flex,
 } from "@chakra-ui/react";
+import jwtDecode from "jwt-decode";
 import { AiOutlineBook } from "react-icons/ai";
 import { useNavigate, useParams } from "react-router-dom";
 
 export default function ContentCard({ heading, contentId }) {
   const navigate = useNavigate();
-  const { moduleId } = useParams();
+  const { id } = useParams();
 
   return (
     <Center py={6}>
@@ -29,7 +30,10 @@ export default function ContentCard({ heading, contentId }) {
         overflow={"hidden"}
         cursor={"pointer"}
         onClick={() => {
-          navigate(`/module/${moduleId}/content/${contentId}`);
+          jwtDecode(JSON.parse(localStorage.getItem("tokens")).access)
+            .user_type === "Teacher"
+            ? navigate(`/teacher/module/${id}/content/${contentId}`)
+            : navigate(`/module/${id}/content/${contentId}`);
         }}
       >
         {/* <Box
