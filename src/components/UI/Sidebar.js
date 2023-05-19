@@ -19,30 +19,40 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { HamburgerIcon } from "@chakra-ui/icons";
-import { Outlet, NavLink } from "react-router-dom";
+import { Outlet, NavLink, useNavigate } from "react-router-dom";
 import { FaBell } from "react-icons/fa";
 import { AiOutlinePlus } from "react-icons/ai";
 import AddModuleModal from "../AddModuleModal";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ModulesContext } from "../../context/ModulesContext";
 import jwtDecode from "jwt-decode";
 
-
-
 const Sidebar = () => {
-  const user_type = jwtDecode(JSON.parse(localStorage.getItem("tokens")).access).user_type;
-  
-  const home_href = user_type === "Student" ? "/" : "/teacher";
+  const nav = useNavigate();
+  let home_href = "";
+  let grade = "";
+  useEffect(() => {
+    if (!localStorage.getItem("tokens")) nav("/login/");
+    const user_type = jwtDecode(
+      JSON.parse(localStorage.getItem("tokens")).access
+    ).user_type;
 
+    home_href = user_type === "Student" ? "/" : "/teacher";
+  }, [nav]);
+  const user_type = jwtDecode(
+    JSON.parse(localStorage.getItem("tokens")).access
+  ).user_type;
+
+  grade = user_type === "Student" ? "/grade" : "/teacher/grade";
   const linkItems = [
     { name: "Home", href: home_href },
-    { name: "Assignments", href: "/assignments" },
+    { name: "Grade", href: grade },
     { name: "Exams", href: "/exams" },
     { name: "Results", href: "/results" },
   ];
 
-  const { displayedModules, updateDisplayedModules } = useContext(ModulesContext);
-
+  const { displayedModules, updateDisplayedModules } =
+    useContext(ModulesContext);
 
   const sidebar = useDisclosure();
   const integrations = useDisclosure();
@@ -50,14 +60,13 @@ const Sidebar = () => {
 
   const toast = useToast();
 
-
   const [isOpen, setIsOpen] = useState(false);
 
   const openModal = () => {
     setIsOpen(true);
-  }
+  };
 
-const editHandler = (updatedData) => {
+  const editHandler = (updatedData) => {
     updateDisplayedModules(updatedData);
     setIsOpen(false);
     toast({
@@ -67,8 +76,7 @@ const editHandler = (updatedData) => {
       duration: 3000,
       isClosable: true,
     });
-  }
-
+  };
 
   const NavItem = (props) => {
     const { icon, children, ...rest } = props;
@@ -245,15 +253,15 @@ const editHandler = (updatedData) => {
             gap={"16px"}
           >
             <Menu>
-              <Button backgroundColor={'transparent'} onClick={openModal}>
-                <AiOutlinePlus color="gray.200"/>
-                {isOpen  && (
-                        <AddModuleModal
-                          isOpen={isOpen}
-                          onClose={() => setIsOpen(false)}
-                          onEdit={editHandler}
-                        />
-                      )}
+              <Button backgroundColor={"transparent"} onClick={openModal}>
+                <AiOutlinePlus color="gray.200" />
+                {isOpen && (
+                  <AddModuleModal
+                    isOpen={isOpen}
+                    onClose={() => setIsOpen(false)}
+                    onEdit={editHandler}
+                  />
+                )}
               </Button>
               <Icon color="gray.500" as={FaBell} cursor="pointer" />
               <MenuButton

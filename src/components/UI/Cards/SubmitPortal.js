@@ -57,7 +57,7 @@ const SubmitPortal = ({dueDate, dueTime}) => {
   };
 
   const filteredAssignmentDetails = assignmentDetails.filter(
-    (item) => item.assignment_id === parseInt(assignmentId)
+    (item) => item.assignment_id === parseInt(assignmentId) && item.uploaded_by === user_id
   );
 
   const submissionId = filteredAssignmentDetails.map((item) => item.id)[0];
@@ -96,6 +96,10 @@ const SubmitPortal = ({dueDate, dueTime}) => {
         },
       })
         .then((response) => response.json())
+        .then((data) => {
+          fileInput.reset();
+          setResubmission(true);
+        })
         .catch((error) => console.error(error));
     } else {
       const formData = new FormData();
@@ -135,7 +139,6 @@ const SubmitPortal = ({dueDate, dueTime}) => {
   useEffect(() => {
     const currentDateTime = new Date();
     const dueDateTime = new Date(`${dueDate} ${dueTime}`);
-    console.log(currentDateTime >= dueDateTime);
     setIsPastDue(currentDateTime >= dueDateTime);
   }, [dueDate, dueTime]);
 

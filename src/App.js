@@ -31,6 +31,8 @@ import { ModulesProvider } from "./context/ModulesContext";
 import TeacherDashboard from "./pages/Teacher/TeacherDashboard";
 import TeacherDetailedContent from "./pages/Teacher/TeacherDetailedContent";
 import TeacherDetailedAssignment from "./pages/Teacher/TeacherDetailedAssignment";
+import GradeAssignments from "./pages/Teacher/GradeAssignments";
+import Grades from "./pages/Student/Grades";
 
 const router = createBrowserRouter([
   {
@@ -55,6 +57,14 @@ const router = createBrowserRouter([
       {
         path: "/teacher",
         element: <TeacherDashboard />,
+      },
+      {
+        path: "/teacher/grade",
+        element: <GradeAssignments />
+      },
+      {
+        path: "/grade",
+        element: <Grades />
       }
     ],
   },

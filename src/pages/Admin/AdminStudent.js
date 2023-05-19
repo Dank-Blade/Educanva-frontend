@@ -99,6 +99,7 @@ const AdminStudent = () => {
   };
 
   const studentList = filteredStudents.length > 0 ? filteredStudents : students;
+  console.log(studentList)
 
   const submitHandler = (e) => {
     e.preventDefault();

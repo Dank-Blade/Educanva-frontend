@@ -35,7 +35,6 @@ const TeacherContent = () => {
   };
 
   const filteredContents = contents.filter((item) => item.content_type === "Content");
-  console.log(filteredContents);
 
   useEffect(() => {
     if (!localStorage.getItem("tokens")) nav("/login/");
