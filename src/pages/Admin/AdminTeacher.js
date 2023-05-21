@@ -180,6 +180,13 @@ const AdminTeacher = () => {
         .then((data) => setTeacher(data))
         .catch((error) => console.error(error));
     });
+    toast({
+      title: "Deleted.",
+      description: "Successfully deleted.",
+      status: "success",
+      duration: 3000,
+      isClosable: true,
+    });
   };
 
   const openEditModal = (id) => {

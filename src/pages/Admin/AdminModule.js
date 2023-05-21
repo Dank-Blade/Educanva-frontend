@@ -139,6 +139,13 @@ const AdminModule = () => {
 
       fetchModules();
     });
+    toast({
+      title: "Deleted.",
+      description: "Successfully deleted.",
+      status: "success",
+      duration: 3000,
+      isClosable: true,
+    });
   };
 
   const openEditModal = (id) => {

@@ -1,5 +1,6 @@
 import { createContext, useState, useEffect } from "react";
 import jwtDecode from "jwt-decode";
+import { useToast } from "@chakra-ui/react";
 
 const AuthContext = createContext();
 
@@ -10,6 +11,8 @@ export const AuthProvider = ({ children }) => {
   let [registerData, setRegisterData] = useState(null);
   let [moduleData, setModuleData] = useState(null);
   let [user, setUser] = useState({});
+
+  const toast = useToast();
 
   let loginUser = async ({ email, password }) => {
     let response = await fetch("http://127.0.0.1:8000/accounts/api/login/", {
@@ -28,7 +31,13 @@ export const AuthProvider = ({ children }) => {
       setUser(jwtDecode(data.access));
       localStorage.setItem("tokens", JSON.stringify(data));
     } else {
-      alert("Something went wrong. Please try again later.");
+      toast({
+        title: "Login Failed.",
+        description: "Failed to login. Email or Password incorrect.",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });  
     }
     return data;
   };
@@ -57,7 +66,13 @@ export const AuthProvider = ({ children }) => {
     if (response.status === 201) {
       setRegisterData(data);
     } else {
-      alert("Something went wrong. Please try again later.");
+      toast({
+        title: "Registration Failed.",
+        description: "Failed to register.",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });  
     }
     return response;
   };
@@ -80,7 +95,45 @@ export const AuthProvider = ({ children }) => {
     if (response.status === 201) {
       setModuleData(data);
     } else {
-      alert("Something went wrong. Please try again later.");
+      toast({
+        title: "Module Addition Failed.",
+        description: "Failed to add module.",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+    return response;
+  };
+
+  let changePassword = async ({ old_password, new_password }) => {
+    let response = await fetch(
+      "http://127.0.0.1:8000/accounts/api/change-password/",
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `Bearer ${
+            JSON.parse(localStorage.getItem("tokens")).access
+          }`,
+        },
+        body: JSON.stringify({
+          old_password: old_password,
+          new_password: new_password,
+        }),
+      }
+    );
+    let data = await response.json();
+    if (response.status === 200) {
+      console.log(data);
+    } else {
+      toast({
+        title: "Password Change Failed.",
+        description: "Failed to change password.",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
     }
     return response;
   };
@@ -90,6 +143,7 @@ export const AuthProvider = ({ children }) => {
     loginUser: loginUser,
     registerUser: registerUser,
     addModule: addModule,
+    changePassword: changePassword,
   };
 
   return (

@@ -18,12 +18,11 @@ const DrawerModule = (props) => {
   const user_type = jwtDecode(JSON.parse(localStorage.getItem("tokens")).access).user_type;
   
   const home_href = user_type === "Student" ? "/" : "/teacher";
+  const grade = user_type === "Student" ? "/grade" : "/teacher/grade";
 
   const linkItems = [
     { name: "Home", href: home_href },
-    { name: "Assignments", href: "/assignments" },
-    { name: "Exams", href: "/exams" },
-    { name: "Results", href: "/results" },
+    { name: "Grade", href: grade },
   ];
 
   const color = useColorModeValue("gray.600", "gray.300");

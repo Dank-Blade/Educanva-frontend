@@ -1,10 +1,5 @@
 import * as React from "react";
-import {
-  BrowserRouter,
-  createBrowserRouter,
-  RouterProvider,
-} from "react-router-dom";
-import PrivateRoute from "./utils/PrivateRoute";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -33,6 +28,8 @@ import TeacherDetailedContent from "./pages/Teacher/TeacherDetailedContent";
 import TeacherDetailedAssignment from "./pages/Teacher/TeacherDetailedAssignment";
 import GradeAssignments from "./pages/Teacher/GradeAssignments";
 import Grades from "./pages/Student/Grades";
+import Profile from "./pages/Profile";
+import ChangePassword from "./pages/ChangePassword";
 
 const router = createBrowserRouter([
   {
@@ -60,11 +57,19 @@ const router = createBrowserRouter([
       },
       {
         path: "/teacher/grade",
-        element: <GradeAssignments />
+        element: <GradeAssignments />,
       },
       {
         path: "/grade",
-        element: <Grades />
+        element: <Grades />,
+      },
+      {
+        path: "/profile",
+        element: <Profile />,
+      },
+      {
+        path: "/change-password",
+        element: <ChangePassword />,
       }
     ],
   },
@@ -114,13 +119,14 @@ const router = createBrowserRouter([
     element: <TeacherAssignment />,
   },
   {
-    path:"/teacher/module/:id/content/:contentId",
+    path: "/teacher/module/:id/content/:contentId",
     element: <TeacherDetailedContent />,
   },
   {
-    path:"/teacher/module/:id/assignment/:assignmentId",
+    path: "/teacher/module/:id/assignment/:assignmentId",
     element: <TeacherDetailedAssignment />,
-  }
+  },
+  
 ]);
 
 function App() {

@@ -15,9 +15,10 @@ import {
   useColorModeValue,
   Stack,
   Icon,
+  useToast,
 } from "@chakra-ui/react";
 import { HamburgerIcon } from "@chakra-ui/icons";
-import { NavLink, useParams } from "react-router-dom";
+import { NavLink, useNavigate, useParams } from "react-router-dom";
 import { useEffect } from "react";
 import jwtDecode from "jwt-decode";
 import { useState } from "react";
@@ -25,6 +26,10 @@ import { useState } from "react";
 export default function ModuleNavbar(props) {
   const params = useParams();
   const id = params.id;
+
+  const nav = useNavigate();
+  const toast = useToast();
+
 
   const [links, setLinks] = useState([]);
 
@@ -54,6 +59,18 @@ export default function ModuleNavbar(props) {
   }, [id]);
 
   const color = useColorModeValue("gray.600", "gray.300");
+
+  const logOutHandler = () => {
+    localStorage.removeItem("tokens");
+    nav("/login/");
+    toast({
+      title: "Logged out.",
+      description: "Logged out successfully.",
+      status: "success",
+      duration: 3000,
+      isClosable: true,
+    });
+  };
 
   const NavItem = (props) => {
     const { icon, children, ...rest } = props;
@@ -136,15 +153,24 @@ export default function ModuleNavbar(props) {
                 <Avatar
                   size={"sm"}
                   src={
-                    "https://images.unsplash.com/photo-1493666438817-866a91353ca9?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=b616b2c5b373a80ffc9636ba24f7a4a9"
+                    "https://www.freepik.com/free-icon/user_14708064.htm#query=default%20user&position=33&from_view=keyword&track=ais"
+                    // "https://images.unsplash.com/photo-1493666438817-866a91353ca9?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=b616b2c5b373a80ffc9636ba24f7a4a9"
                   }
                 />
               </MenuButton>
               <MenuList>
-                <MenuItem>Link 1</MenuItem>
-                <MenuItem>Link 2</MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    nav("/profile");
+                  }}
+                >
+                  Profile
+                </MenuItem>
+                <MenuItem onClick={() => nav("/change-password")}>
+                  Change Password
+                </MenuItem>
                 <MenuDivider />
-                <MenuItem>Link 3</MenuItem>
+                <MenuItem onClick={logOutHandler}>Log Out</MenuItem>
               </MenuList>
             </Menu>
           </Flex>

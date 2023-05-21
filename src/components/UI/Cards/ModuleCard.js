@@ -6,6 +6,7 @@ import {
   Text,
   Stack,
   useColorModeValue,
+  Image,
 } from "@chakra-ui/react";
 import jwtDecode from "jwt-decode";
 import { useNavigate } from "react-router-dom";
@@ -41,12 +42,13 @@ export default function ModuleCard({ module, id }) {
           rounded={"md"}
           pos={"relative"}
         >
-          {/* <Image
-            src={
-              'https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'
-            }
-            layout={'fill'}
-          /> */}
+          <Image
+            src={"https://img.freepik.com/free-photo/front-view-stacked-books-ladders-education-day_23-2149241046.jpg?w=1380&t=st=1684581836~exp=1684582436~hmac=c9a90b35648a256f0cdf943d087b600af74db487f9abe89d46b0c2417db63c9f "}
+            // layout={'fill'}
+            objectFit={'cover'}
+            height={"100px"}
+            width={"100%"}
+          />
         </Box>
         {/* <Avatar
             size={'lg'}

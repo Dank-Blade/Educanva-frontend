@@ -99,7 +99,7 @@ const AdminStudent = () => {
   };
 
   const studentList = filteredStudents.length > 0 ? filteredStudents : students;
-  console.log(studentList)
+  console.log(studentList);
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -181,6 +181,13 @@ const AdminStudent = () => {
         .then((response) => response.json())
         .then((data) => setStudent(data))
         .catch((error) => console.error(error));
+    });
+    toast({
+      title: "Deleted.",
+      description: "Successfully deleted.",
+      status: "success",
+      duration: 3000,
+      isClosable: true,
     });
   };
 

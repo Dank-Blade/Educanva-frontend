@@ -31,6 +31,7 @@ const Sidebar = () => {
   const nav = useNavigate();
   let home_href = "";
   let grade = "";
+
   useEffect(() => {
     if (!localStorage.getItem("tokens")) nav("/login/");
     const user_type = jwtDecode(
@@ -47,8 +48,6 @@ const Sidebar = () => {
   const linkItems = [
     { name: "Home", href: home_href },
     { name: "Grade", href: grade },
-    { name: "Exams", href: "/exams" },
-    { name: "Results", href: "/results" },
   ];
 
   const { displayedModules, updateDisplayedModules } =
@@ -72,6 +71,18 @@ const Sidebar = () => {
     toast({
       title: "Module added.",
       description: "Successfully added.",
+      status: "success",
+      duration: 3000,
+      isClosable: true,
+    });
+  };
+
+  const logOutHandler = () => {
+    localStorage.removeItem("tokens");
+    nav("/login/");
+    toast({
+      title: "Logged out.",
+      description: "Logged out successfully.",
       status: "success",
       duration: 3000,
       isClosable: true,
@@ -263,7 +274,6 @@ const Sidebar = () => {
                   />
                 )}
               </Button>
-              <Icon color="gray.500" as={FaBell} cursor="pointer" />
               <MenuButton
                 as={Button}
                 rounded={"full"}
@@ -274,15 +284,16 @@ const Sidebar = () => {
                 <Avatar
                   size={"sm"}
                   src={
-                    "https://images.unsplash.com/photo-1493666438817-866a91353ca9?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=b616b2c5b373a80ffc9636ba24f7a4a9"
+                    // "https://images.unsplash.com/photo-1493666438817-866a91353ca9?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=b616b2c5b373a80ffc9636ba24f7a4a9"
+                    "https://www.freepik.com/free-icon/user_14708064.htm#query=default%20user&position=33&from_view=keyword&track=ais"
                   }
                 />
               </MenuButton>
               <MenuList>
-                <MenuItem>Link 1</MenuItem>
-                <MenuItem>Link 2</MenuItem>
+                <MenuItem onClick={() => {nav("/profile")}}>Profile</MenuItem>
+                <MenuItem onClick={() => nav("/change-password")}>Change Password</MenuItem>
                 <MenuDivider />
-                <MenuItem>Link 3</MenuItem>
+                <MenuItem onClick={logOutHandler}>Log Out</MenuItem>
               </MenuList>
             </Menu>
           </Flex>

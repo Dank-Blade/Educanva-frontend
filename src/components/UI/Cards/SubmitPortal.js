@@ -6,6 +6,7 @@ import {
   CardHeader,
   Heading,
   Input,
+  useToast,
 } from "@chakra-ui/react";
 import useInput from "../../../hooks/useInput";
 import { useParams } from "react-router-dom";
@@ -30,6 +31,8 @@ const SubmitPortal = ({dueDate, dueTime}) => {
   const [isPastDue, setIsPastDue] = useState(false);
 
   const fileInputRef = useRef(null);
+
+  const toast = useToast();
 
   const fileChangeHandler = (event) => {
     file = event.target.files[0];
@@ -101,6 +104,12 @@ const SubmitPortal = ({dueDate, dueTime}) => {
           setResubmission(true);
         })
         .catch((error) => console.error(error));
+        toast({
+          title: "Assignment submitted.",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
     } else {
       const formData = new FormData();
 
@@ -133,6 +142,12 @@ const SubmitPortal = ({dueDate, dueTime}) => {
         fileInputRef.current.value = ""; // Clear the file input value
       }
     }
+    toast({
+      title: "Assignment submitted.",
+      status: "success",
+      duration: 3000,
+      isClosable: true,
+    });
     setResubmission(false);
   };
 

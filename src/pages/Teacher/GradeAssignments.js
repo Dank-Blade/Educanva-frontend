@@ -94,6 +94,7 @@ const GradeAssignments = () => {
         prevData[index] = updatedData;
         return [...prevData];
       });
+      fetchSubmissionDetails(modules[0].id);
     setIsOpen(false);
   };
 
