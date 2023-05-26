@@ -78,13 +78,6 @@ export default function Login() {
       <Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
         <Stack align={"center"}>
           <Heading fontSize={"4xl"}>Sign in to your account</Heading>
-          <Text fontSize={"lg"} color={"gray.600"}>
-            Click{" "}
-            <Link to="/register" color={"blue.400"}>
-              here
-            </Link>{" "}
-            to Sign Up.
-          </Text>
         </Stack>
         <Box
           rounded={"lg"}
@@ -107,10 +100,7 @@ export default function Login() {
                   direction={{ base: "column", sm: "row" }}
                   align={"start"}
                   justify={"space-between"}
-                >
-                  <Checkbox>Remember me</Checkbox>
-                  <Link color={"blue.400"}>Forgot password?</Link>
-                </Stack>
+                ></Stack>
                 <Button
                   bg={"blue.400"}
                   color={"white"}

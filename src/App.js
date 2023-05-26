@@ -77,10 +77,6 @@ const router = createBrowserRouter([
     element: <AdminSidebar />,
     children: [
       {
-        path: "/admin",
-        element: <AdminHome />,
-      },
-      {
         path: "/admin/students",
         element: <AdminStudent />,
       },
@@ -92,6 +88,14 @@ const router = createBrowserRouter([
         path: "/admin/modules",
         element: <AdminModule />,
       },
+      {
+        path: "/admin/profile",
+        element: <Profile />,
+      },
+      {
+        path: "/admin/change-password",
+        element: <ChangePassword />,
+      }
     ],
   },
   {

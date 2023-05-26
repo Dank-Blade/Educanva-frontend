@@ -23,7 +23,6 @@ import { Outlet, NavLink, useNavigate } from "react-router-dom";
 import { FaBell } from "react-icons/fa";
 
 const linkItems = [
-  { name: "Home", href: "/admin" },
   { name: "Students", href: "/admin/students" },
   { name: "Teachers", href: "/admin/teachers" },
   { name: "Modules", href: "/admin/modules" },
@@ -236,13 +235,22 @@ const AdminSidebar = () => {
                 <Avatar
                   size={"sm"}
                   src={
-                    "https://images.unsplash.com/photo-1493666438817-866a91353ca9?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=b616b2c5b373a80ffc9636ba24f7a4a9"
+                    "https://www.freepik.com/free-icon/user_14708064.htm#query=default%20user&position=33&from_view=keyword&track=ais"
+                    // "https://images.unsplash.com/photo-1493666438817-866a91353ca9?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=b616b2c5b373a80ffc9636ba24f7a4a9"
                   }
                 />
               </MenuButton>
               <MenuList>
-                <MenuItem>Link 1</MenuItem>
-                <MenuItem>Link 2</MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    nav("/admin/profile");
+                  }}
+                >
+                  Profile
+                </MenuItem>
+                <MenuItem onClick={() => nav("/admin/change-password")}>
+                  Change Password
+                </MenuItem>
                 <MenuDivider />
                 <MenuItem onClick={logOutHandler}>Log Out</MenuItem>
               </MenuList>
